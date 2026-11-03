@@ -6,30 +6,30 @@
 <meta name="theme-color" content="#0f3b45">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<style>:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);height:100%}body{margin:0;font-size:14px}[hidden]{display:none!important}</style>
 <title>مترجم سفر ترکیه</title>
 <style>
 /* Layout: one screen, two facing halves (guest rotated 180°) split by a thin control bar */
 :root{
-  --bg:#eef1f2; --me:#ffffff; --guest:#0f3b45; --guest-fg:#eaf6f6; --guest-soft:#16505d;
-  --fg:#1b2427; --muted:#5d6b70; --line:#d5dcdf; --accent:#c4472c; --accent-fg:#fff;
-  --chip:#e4eaec; --ok:#2e7d5b;
+  --bg:#eef1f2; --me:#ffffff; --guest:#0f3b45; --guest-fg:#eaf6f6; --guest-soft:#16505d; --guest-muted:#9fc8cc;
+  --fg:#1b2427; --muted:#5d6b70; --line:#d5dcdf; --accent:#c4472c; --accent-fg:#fff; --chip:#e4eaec; --ok:#2e7d5b;
   --font:"Vazirmatn","Noto Sans Arabic",system-ui,-apple-system,"Segoe UI",Tahoma,sans-serif;
+  box-sizing:border-box;height:100%;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --bg:#0d1214; --me:#151c1f; --guest:#0b2a31; --guest-fg:#dff1f1; --guest-soft:#123f49;
+  --bg:#0d1214; --me:#151c1f; --guest:#0b2a31; --guest-fg:#dff1f1; --guest-soft:#123f49; --guest-muted:#8fb9be;
   --fg:#e6ecee; --muted:#93a3a8; --line:#2a3539; --accent:#e0623f; --accent-fg:#fff; --chip:#1f292c; --ok:#5cc495; color-scheme:dark}}
 :root[data-theme="dark"]{
-  --bg:#0d1214; --me:#151c1f; --guest:#0b2a31; --guest-fg:#dff1f1; --guest-soft:#123f49;
+  --bg:#0d1214; --me:#151c1f; --guest:#0b2a31; --guest-fg:#dff1f1; --guest-soft:#123f49; --guest-muted:#8fb9be;
   --fg:#e6ecee; --muted:#93a3a8; --line:#2a3539; --accent:#e0623f; --accent-fg:#fff; --chip:#1f292c; --ok:#5cc495; color-scheme:dark}
-html,body{height:100%}
-body{background:var(--bg);color:var(--fg);font-family:var(--font);overflow:hidden}
+[hidden]{display:none!important}
 *{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--fg);font-family:var(--font);font-size:14px;overflow:hidden}
 button,input,select{font:inherit;color:inherit}
 button{cursor:pointer}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .app{height:100%;display:grid;grid-template-rows:1fr auto 1fr}
-.half{display:flex;flex-direction:column;gap:10px;min-height:0;
+.half{display:flex;flex-direction:column;gap:8px;min-height:0;
   padding-block:12px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
 .guest{background:var(--guest);color:var(--guest-fg);transform:rotate(180deg)}
 .app.flat .guest{transform:none}
@@ -39,56 +39,70 @@ button{cursor:pointer}
 select{border:1px solid var(--line);background:var(--chip);border-radius:8px;padding:4px 8px}
 .guest select{background:var(--guest-soft);border-color:transparent;color:var(--guest-fg)}
 .feed{flex:1;min-height:0;overflow-y:auto;display:flex;flex-direction:column;justify-content:flex-end;gap:6px}
+.stack{display:flex;flex-direction:column;gap:4px}
 .big{font-size:clamp(1.25rem,5.4vw,1.75rem);font-weight:700;line-height:1.5;text-wrap:pretty;overflow-wrap:anywhere}
+.big.draft{opacity:.5}
 .small{font-size:.85rem;color:var(--muted);overflow-wrap:anywhere}
-.guest .small{color:#9fc8cc}
-.empty{color:var(--muted);font-size:.95rem}
-.guest .empty{color:#9fc8cc}
+.guest .small,.guest .empty{color:var(--guest-muted)}
+.empty{color:var(--muted);font-size:.95rem;line-height:1.7}
 .thinking{font-size:.95rem;opacity:.8}
+.note-line{font-size:.78rem;color:var(--accent)}
 .row{display:flex;gap:8px;align-items:stretch}
-.row input{flex:1;min-width:0;border:1px solid var(--line);background:var(--bg);border-radius:12px;padding:12px 12px;font-size:1rem}
+.row input{flex:1;min-width:0;border:1px solid var(--line);background:var(--bg);border-radius:12px;padding:12px;font-size:1rem}
 .guest .row input{background:var(--guest-soft);border-color:transparent;color:var(--guest-fg)}
-.guest .row input::placeholder{color:#8fb9be}
-.ib{flex:0 0 auto;width:48px;border:0;border-radius:12px;background:var(--chip);display:grid;place-items:center}
+.guest .row input::placeholder{color:var(--guest-muted)}
+.ib{flex:0 0 auto;width:48px;min-height:48px;border:0;border-radius:12px;background:var(--chip);display:grid;place-items:center}
 .guest .ib{background:var(--guest-soft);color:var(--guest-fg)}
 .ib.send{background:var(--accent);color:var(--accent-fg)}
-.ib.rec{background:var(--accent);color:var(--accent-fg);animation:pulse 1s infinite}
-@keyframes pulse{50%{opacity:.6}}
+.ib.rec,.guest .ib.rec{background:var(--ok);color:#fff;animation:pulse 1.2s infinite}
+.ib.x{background:var(--chip)}
+@keyframes pulse{50%{opacity:.65}}
 @media (prefers-reduced-motion:reduce){.ib.rec{animation:none}}
 .ib svg{width:22px;height:22px}
-.spk{border:0;background:none;padding:2px 6px;border-radius:8px;opacity:.8;color:inherit}
-.hint{font-size:.8rem;color:var(--accent)}
+.st{font-size:.8rem;color:var(--ok);font-weight:500}
+.guest .st{color:#7fe0b4}
+.mini{border:1px solid var(--line);background:none;border-radius:8px;padding:3px 8px;font-size:.78rem;align-self:flex-start;color:inherit}
+.guest .mini{border-color:var(--guest-soft)}
+.hint{font-size:.8rem;color:var(--accent);line-height:1.6}
 .guest .hint{color:#ffb39f}
 .bar{display:flex;gap:6px;align-items:center;justify-content:center;flex-wrap:wrap;background:var(--bg);border-block:1px solid var(--line);
   padding-block:6px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
-.bar button{border:1px solid var(--line);background:var(--me);border-radius:999px;padding:6px 12px;font-size:.85rem;display:flex;gap:6px;align-items:center}
-.bar .rate{font-size:.78rem;color:var(--muted);font-variant-numeric:tabular-nums}
-.saved{font-size:.75rem;color:var(--ok)}
+.bar button{border:1px solid var(--line);background:var(--me);border-radius:999px;padding:5px 11px;font-size:.8rem}
+.toast{position:fixed;left:50%;transform:translateX(-50%);top:50%;background:var(--fg);color:var(--bg);padding:8px 14px;border-radius:10px;font-size:.85rem;z-index:30}
 /* sheets */
 .sheet{position:fixed;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:flex-end;z-index:20}
-.panel{background:var(--me);width:100%;max-height:85%;overflow-y:auto;border-radius:18px 18px 0 0;display:flex;flex-direction:column;gap:12px;
+.panel{background:var(--me);width:100%;max-height:88%;overflow-y:auto;border-radius:18px 18px 0 0;display:flex;flex-direction:column;gap:12px;
   padding-block:16px calc(16px + env(safe-area-inset-bottom,0px));padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
 .panel h2{margin:0;font-size:1.1rem;text-wrap:balance}
 .ph{display:flex;align-items:center;gap:8px}.ph h2{flex:1}
 .close{border:0;background:var(--chip);border-radius:999px;padding:6px 12px}
 .field{display:flex;flex-direction:column;gap:4px}
 .field label{font-size:.8rem;color:var(--muted)}
-.field input{border:1px solid var(--line);background:var(--bg);border-radius:12px;padding:12px;font-size:1.3rem;font-weight:700;font-variant-numeric:tabular-nums;direction:ltr;text-align:right}
+.panel select,.txtin{border:1px solid var(--line);background:var(--bg);border-radius:12px;padding:10px;font-size:1rem;min-width:0}
+.num{font-size:1.3rem;font-weight:700;font-variant-numeric:tabular-nums;direction:ltr;text-align:right}
 .note{font-size:.8rem;color:var(--muted);line-height:1.7}
+.btn{border:0;background:var(--accent);color:var(--accent-fg);border-radius:12px;padding:10px 14px;flex:0 0 auto}
+.btn2{border:1px solid var(--line);background:var(--me);border-radius:12px;padding:10px 14px}
+.addrow{display:flex;gap:8px}.addrow input{flex:1}
+.list{display:flex;flex-direction:column;gap:8px}
+.item{border:1px solid var(--line);border-radius:12px;padding:10px 12px;display:flex;gap:8px;align-items:center;background:var(--bg)}
+.item .use{flex:1;min-width:0;border:0;background:none;padding:0;text-align:inherit;display:flex;flex-direction:column;gap:3px}
+.item .fa{font-weight:700;line-height:1.6}
+.item .trn{font-size:.85rem;color:var(--muted);direction:ltr;text-align:left}
+.del{border:1px solid var(--line);background:var(--me);border-radius:8px;padding:4px 10px;font-size:.78rem;color:var(--accent);flex:0 0 auto}
 .conv{border:1px solid var(--line);border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:4px;background:var(--bg)}
 .conv .t{font-weight:700}
 .conv .m{font-size:.8rem;color:var(--muted)}
-.conv .acts{display:flex;gap:8px;margin-top:4px}
+.conv .acts{display:flex;gap:8px;margin-top:4px;flex-wrap:wrap}
 .conv .acts button{border:1px solid var(--line);background:var(--me);border-radius:8px;padding:4px 10px;font-size:.8rem}
-.conv .acts .del{color:var(--accent)}
 .line{border-bottom:1px solid var(--line);padding-block:8px;display:flex;flex-direction:column;gap:2px}
 .line .s{font-size:.8rem;color:var(--muted)}
 .line .tr{font-weight:600}
 .tag{font-size:.7rem;background:var(--chip);border-radius:6px;padding:1px 6px;align-self:flex-start}
 </style>
-
 </head>
 <body>
+
 <div class="app" id="app">
   <!-- Guest half (faces the other person) -->
   <section class="half guest" id="guestHalf" dir="ltr" lang="tr">
@@ -99,50 +113,72 @@ select{border:1px solid var(--line);background:var(--chip);border-radius:8px;pad
         <option value="en">English</option>
       </select>
     </div>
-    <div class="feed" id="gFeed"><div class="empty" id="gEmpty">Türkçe konuşun veya yazın. Çeviri karşı tarafa Farsça gösterilir.</div></div>
+    <div class="feed" id="gFeed"></div>
     <div class="hint" id="gHint" hidden></div>
+    <div class="st" id="gSt" hidden></div>
     <form class="row" id="gForm">
       <input id="gIn" autocomplete="off" placeholder="Yazın veya konuşun…">
+      <button type="button" class="ib x" id="gX" hidden aria-label="İptal"></button>
       <button type="button" class="ib" id="gMic" aria-label="Mikrofon"></button>
-      <button type="submit" class="ib send" aria-label="Gönder"></button>
+      <button type="submit" class="ib send" id="gSend" aria-label="Gönder"></button>
     </form>
   </section>
 
   <nav class="bar" dir="rtl">
-    <button id="bLira" type="button">₺ تبدیل لیر</button>
+    <button id="bPh" type="button">جملات</button>
+    <button id="bLira" type="button">₺ لیر</button>
     <button id="bHist" type="button">گفتگوها</button>
-    <button id="bNew" type="button">گفتگوی جدید</button>
+    <button id="bNew" type="button">جدید</button>
     <button id="bFlip" type="button">چرخش</button>
     <button id="bSet" type="button">تنظیمات</button>
-    <span class="saved" id="saved" hidden>ذخیره شد</span>
   </nav>
 
   <!-- My half -->
   <section class="half me" id="meHalf" dir="rtl" lang="fa">
     <div class="head">
       <span class="who">من</span>
+      <span class="small" id="engBadge"></span>
       <select id="mLang" aria-label="زبان من">
         <option value="fa" selected>فارسی</option>
         <option value="en">English</option>
       </select>
     </div>
-    <div class="feed" id="mFeed"><div class="empty" id="mEmpty">فارسی بگویید یا بنویسید. ترجمه با متن درشت در نیمه بالا برای طرف مقابل نمایش داده و خوانده می‌شود.</div></div>
+    <div class="feed" id="mFeed"></div>
     <div class="hint" id="mHint" hidden></div>
+    <div class="st" id="mSt" hidden></div>
     <form class="row" id="mForm">
       <input id="mIn" autocomplete="off" placeholder="بنویسید یا با میکروفون بگویید…">
+      <button type="button" class="ib x" id="mX" hidden aria-label="لغو"></button>
       <button type="button" class="ib" id="mMic" aria-label="میکروفون"></button>
-      <button type="submit" class="ib send" aria-label="ارسال"></button>
+      <button type="submit" class="ib send" id="mSend" aria-label="ارسال"></button>
     </form>
   </section>
+</div>
+
+<!-- Phrases sheet -->
+<div class="sheet" id="phSheet" hidden dir="rtl">
+  <div class="panel">
+    <div class="ph"><h2>جملات ثابت</h2><button class="close" data-close>بستن</button></div>
+    <form class="addrow" id="phForm">
+      <input class="txtin" id="phIn" autocomplete="off" placeholder="جمله جدید فارسی…">
+      <button class="btn" type="submit" id="phAdd">افزودن</button>
+    </form>
+    <div class="note">روی هر جمله بزنید تا فوراً برای طرف مقابل نمایش داده و خوانده شود. ترجمه هنگام افزودن ذخیره می‌شود، پس بعداً سریع است.</div>
+    <div class="list" id="phList"></div>
+  </div>
 </div>
 
 <!-- Lira sheet -->
 <div class="sheet" id="liraSheet" hidden dir="rtl">
   <div class="panel">
-    <div class="ph"><h2>تبدیل لیر به تومان</h2><button class="close" data-close>بستن</button></div>
-    <div class="field"><label for="lira">لیر ترکیه (₺)</label><input id="lira" inputmode="decimal" value="100"></div>
-    <div class="field"><label for="toman">تومان</label><input id="toman" inputmode="decimal"></div>
-    <div class="field"><label for="rate">نرخ هر لیر (تومان) — قابل ویرایش</label><input id="rate" inputmode="decimal"></div>
+    <div class="ph"><h2>تبدیل لیر</h2><button class="close" data-close>بستن</button></div>
+    <div class="field"><label for="lira">لیر ترکیه (₺)</label><input class="txtin num" id="lira" inputmode="decimal" value="100"></div>
+    <div class="field"><label for="toman">تومان</label><input class="txtin num" id="toman" inputmode="decimal"></div>
+    <div class="field"><label for="usd">دلار آمریکا ($)</label><input class="txtin num" id="usd" inputmode="decimal"></div>
+    <div class="addrow">
+      <div class="field" style="flex:1;min-width:0"><label for="rate">هر لیر = تومان</label><input class="txtin num" id="rate" inputmode="decimal"></div>
+      <div class="field" style="flex:1;min-width:0"><label for="usdRate">هر دلار = لیر</label><input class="txtin num" id="usdRate" inputmode="decimal"></div>
+    </div>
     <div class="note" id="rateNote"></div>
   </div>
 </div>
@@ -150,14 +186,34 @@ select{border:1px solid var(--line);background:var(--chip);border-radius:8px;pad
 <!-- Settings sheet -->
 <div class="sheet" id="setSheet" hidden dir="rtl">
   <div class="panel">
-    <div class="ph"><h2>موتور ترجمه</h2><button class="close" data-close>بستن</button></div>
-    <div class="field"><label for="eng">موتور</label>
-      <select id="eng" style="padding:10px;font-size:1rem"><option value="google">رایگان (Google Translate) — بدون کلید</option><option value="claude">Claude — دقیق‌تر، نیاز به کلید API</option></select></div>
-    <div class="field" id="keyF"><label for="key">کلید API Anthropic (فقط روی همین گوشی ذخیره می‌شود)</label><input id="key" type="password" autocomplete="off" placeholder="sk-ant-..." style="font-size:1rem;font-weight:400"></div>
-    <div class="field" id="modF"><label for="mod">مدل</label>
-      <select id="mod" style="padding:10px;font-size:1rem"><option value="claude-sonnet-5-5">Sonnet — دقت بالا</option><option value="claude-haiku-5-5">Haiku — سریع‌تر و ارزان‌تر</option></select></div>
-    <div class="note">اگر Claude در دسترس نباشد، برنامه خودکار به موتور رایگان برمی‌گردد. گفتگوها فقط روی همین گوشی ذخیره می‌شوند.</div>
-    <div class="field"><label>وضعیت فنی (برای عیب‌یابی)</label><div class="note" id="diag" dir="rtl"></div></div>
+    <div class="ph"><h2>تنظیمات</h2><button class="close" data-close>بستن</button></div>
+    <div class="field"><label for="eng">موتور ترجمه</label>
+      <select id="eng">
+        <option value="free">ساده و رایگان (Google Translate) — بدون کلید</option>
+        <option value="gemini">هوش مصنوعی Gemini — کلید رایگان</option>
+        <option value="claude">هوش مصنوعی Claude — دقیق‌ترین، کلید پولی</option>
+      </select></div>
+    <div id="gemF" class="field">
+      <label for="gkey">کلید Gemini API</label>
+      <input class="txtin" id="gkey" type="password" autocomplete="off" placeholder="AIza...">
+      <label for="gmodel">مدل</label>
+      <input class="txtin" id="gmodel" autocomplete="off" dir="ltr">
+      <div class="note">کلید رایگان: سایت aistudio.google.com/apikey ← Create API key. در ایران با VPN باز می‌شود.</div>
+    </div>
+    <div id="claF" class="field">
+      <label for="ckey">کلید Anthropic API</label>
+      <input class="txtin" id="ckey" type="password" autocomplete="off" placeholder="sk-ant-...">
+      <label for="cmodel">مدل</label>
+      <select id="cmodel"><option value="claude-sonnet-5-5">Sonnet — دقت بالا</option><option value="claude-haiku-5-5">Haiku — سریع‌تر و ارزان‌تر</option></select>
+      <div class="note">کلید از console.anthropic.com؛ هزینه به‌ازای هر پیام، بسیار کم.</div>
+    </div>
+    <div class="note">با موتور هوش مصنوعی، اول ترجمه ساده کم‌رنگ نمایش داده می‌شود و چند ثانیه بعد با ترجمه مفهومی جایگزین و خوانده می‌شود. اگر هوش مصنوعی جواب ندهد، همان ترجمه ساده می‌ماند.</div>
+    <div class="field"><label for="pause">مکث قبل از ترجمه (سکوتِ لازم تا حرف تمام‌شده حساب شود)</label>
+      <select id="pause"><option value="1500">۱٫۵ ثانیه</option><option value="2500">۲٫۵ ثانیه</option><option value="3500">۳٫۵ ثانیه</option><option value="5000">۵ ثانیه</option></select></div>
+    <div class="addrow"><button class="btn2" type="button" id="testBtn">تست موتور ترجمه</button></div>
+    <div class="note" id="testOut"></div>
+    <div class="field"><label>وضعیت فنی (برای عیب‌یابی)</label><div class="note" id="diag"></div></div>
+    <div class="note">کلیدها، تنظیمات، جملات و گفتگوها فقط روی همین گوشی ذخیره می‌شوند.</div>
   </div>
 </div>
 
@@ -169,48 +225,59 @@ select{border:1px solid var(--line);background:var(--chip);border-radius:8px;pad
   </div>
 </div>
 
+<div class="toast" id="toast" hidden></div>
+
 <script>
 (function(){
-const ICON_MIC='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>';
-const ICON_SEND='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg>';
+'use strict';
 const $=id=>document.getElementById(id);
-document.querySelectorAll('.ib.send').forEach(b=>b.innerHTML=ICON_SEND);
-$('gMic').innerHTML=ICON_MIC;$('mMic').innerHTML=ICON_MIC;
-// RTL send arrow points left on my side
-$('mForm').querySelector('.send svg').style.transform='scaleX(-1)';
+const ls={get(k,d){try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+const ICON={
+  mic:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>',
+  send:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg>',
+  x:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>',
+  check:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></svg>'
+};
+['mSend','gSend'].forEach(id=>$(id).innerHTML=ICON.send);
+$('mSend').querySelector('svg').style.transform='scaleX(-1)';
+['mX','gX'].forEach(id=>$(id).innerHTML=ICON.x);
+['mMic','gMic'].forEach(id=>$(id).innerHTML=ICON.mic);
 
 const NAME={fa:'Persian (Farsi, Iran)',tr:'Turkish',en:'English'};
 const SR_LANG={fa:'fa-IR',tr:'tr-TR',en:'en-US'};
 const UI={
-  tr:{who:'KARŞI TARAF',ph:'Yazın veya konuşun…',empty:'Türkçe konuşun veya yazın. Çeviri karşı tarafa gösterilir.',think:'Çevriliyor…',mic:'Mikrofon bu görünümde çalışmıyor. Klavyedeki mikrofon tuşunu kullanın.'},
-  en:{who:'OTHER PERSON',ph:'Type or speak…',empty:'Speak or type in English. The translation is shown to the other person.',think:'Translating…',mic:'Microphone is not available here. Use the mic key on your keyboard.'}
+  tr:{who:'KARŞI TARAF',ph:'Yazın veya konuşun…',empty:'Türkçe konuşun veya yazın. Çeviri karşı tarafa gösterilir.',think:'Çevriliyor…',mic:'Mikrofon kullanılamıyor. Klavyedeki mikrofon tuşunu kullanın.',listen:'Dinliyorum… Bitince ✓, iptal için ✕',said:'Siz: ',shown:'Çeviri: ',fail:'Çeviri başarısız. Tekrar deneyin.'},
+  en:{who:'OTHER PERSON',ph:'Type or speak…',empty:'Speak or type in English. The translation is shown to the other person.',think:'Translating…',mic:'Microphone is not available. Use the mic key on your keyboard.',listen:'Listening… tap ✓ when done, ✕ to cancel',said:'You: ',shown:'Shown as: ',fail:'Translation failed. Try again.'}
 };
-const DEFAULT_RATE=5440, RATE_DATE='۱۱ آبان ۱۴۰۵';
+const DEFAULT_RATE=5440, RATE_DATE='۱۱ آبان ۱۴۰۵', DEFAULT_USD=49.98, USD_DATE='۱۲ آبان ۱۴۰۵';
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+const canSpeak='speechSynthesis' in window && typeof SpeechSynthesisUtterance!=='undefined';
 
-const ls={get(k,d){try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+// ---------- settings ----------
+let cfg=Object.assign({engine:'free',gkey:'',gmodel:'gemini-flash-latest',ckey:'',cmodel:'claude-sonnet-5-5',pause:2500},ls.get('cfg2',{}));
+(function migrate(){const old=ls.get('cfg',null);if(old&&!ls.get('cfg2',null)&&old.engine==='claude'&&old.key){cfg.engine='claude';cfg.ckey=old.key;if(old.model)cfg.cmodel=old.model;ls.set('cfg2',cfg)}})();
+const saveCfg=()=>ls.set('cfg2',cfg);
+const aiReady=()=>(cfg.engine==='claude'&&!!cfg.ckey)||(cfg.engine==='gemini'&&!!cfg.gkey);
+const aiName=()=>cfg.engine==='claude'?'Claude':'Gemini';
+const diag={engine:'-',ms:0,mic:'-'};
 
 // ---------- state ----------
 let conv=newConv();
 function newConv(){return{id:'c'+Date.now().toString(36),createdAt:Date.now(),lines:[]}}
 const lang=()=>({me:$('mLang').value,guest:$('gLang').value});
+function toast(t){const el=$('toast');el.textContent=t;el.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>el.hidden=true,1600)}
 
-// ---------- settings (stored only on this phone) ----------
-let micGranted=false;
-const diag={engine:'-',ms:0,mic:'-'};
-function showDiag(){const el=document.getElementById('diag');if(el)el.textContent='HTTPS: '+(window.isSecureContext?'بله':'خیر')+' · تشخیص گفتار: '+(SR?'دارد':'ندارد')+' · میکروفون: '+diag.mic+' · آخرین ترجمه: '+diag.engine+(diag.ms?(' در '+(diag.ms/1000).toFixed(1)+' ثانیه'):'')}
-let cfg=ls.get('cfg',{engine:'google',key:'',model:'claude-sonnet-5-5'});
-const db=null,uid=null;
-
-// ---------- guest UI language ----------
-function applyGuestUI(){const t=UI[$('gLang').value];$('gWho').textContent=t.who;$('gIn').placeholder=t.ph;$('gEmpty').textContent=t.empty;$('guestHalf').lang=$('gLang').value}
-$('gLang').onchange=()=>{applyGuestUI();ls.set('gLang',$('gLang').value)};
+// ---------- languages / layout ----------
+function applyGuestUI(){const t=UI[$('gLang').value];$('gWho').textContent=t.who;$('gIn').placeholder=t.ph;$('guestHalf').lang=$('gLang').value}
+$('gLang').onchange=()=>{applyGuestUI();ls.set('gLang',$('gLang').value);render()};
 $('mLang').onchange=()=>{ls.set('mLang',$('mLang').value);$('meHalf').dir=$('mLang').value==='fa'?'rtl':'ltr'};
 $('gLang').value=ls.get('gLang','tr');$('mLang').value=ls.get('mLang','fa');applyGuestUI();$('mLang').onchange();
 if(ls.get('flat',false))$('app').classList.add('flat');
 $('bFlip').onclick=()=>{const f=$('app').classList.toggle('flat');ls.set('flat',f)};
+function badge(){$('engBadge').textContent=aiReady()?('هوش مصنوعی: '+aiName()):'ترجمه ساده'}
 
-// ---------- translation ----------
-async function withTimeout(p,ms){let t;return Promise.race([p,new Promise((_,r)=>t=setTimeout(()=>r({code:'timeout'}),ms))]).finally(()=>clearTimeout(t))}
+// ---------- translation engines ----------
+function withTimeout(p,ms){let t;return Promise.race([p,new Promise((_,r)=>t=setTimeout(()=>r({code:'timeout'}),ms))]).finally(()=>clearTimeout(t))}
 async function googleT(text,from,to){
   const u='https://translate.googleapis.com/translate_a/single?client=gtx&dt=t&sl='+from+'&tl='+to+'&q='+encodeURIComponent(text);
   const r=await withTimeout(fetch(u),6000);if(!r.ok)throw{code:'http'};
@@ -221,140 +288,262 @@ async function myMemoryT(text,from,to){
   const r=await withTimeout(fetch(u),8000);if(!r.ok)throw{code:'http'};
   const j=await r.json();const t=(j.responseData&&j.responseData.translatedText||'').trim();if(!t)throw{code:'empty'};return t;
 }
-async function claudeT(text,from,to){
-  const ctx=conv.lines.slice(-6).map(l=>`${l.who==='me'?'Traveler':'Local'}: ${l.src}`).join('\n')||'(none)';
-  const prompt=`You are a professional live interpreter helping an Iranian traveler talk with people in Turkey (shops, taxis, hotels, restaurants, doctors).
+function quickT(text,from,to){
+  const g=googleT(text,from,to).then(r=>({r,e:'Google'}));
+  const b=new Promise(res=>setTimeout(res,1500)).then(()=>myMemoryT(text,from,to)).then(r=>({r,e:'MyMemory'}));
+  return Promise.any([g,b]).catch(()=>{throw{code:'net'}});
+}
+function aiPrompt(text,from,to){
+  const ctx=conv.lines.filter(l=>l.tr).slice(-6).map(l=>`${l.who==='me'?'Traveler':'Local'}: ${l.src}`).join('\n')||'(none)';
+  return `You are an expert live interpreter for an Iranian traveler in Turkey (shops, bazaars, taxis, hotels, restaurants, pharmacies, doctors, police).
 Translate the MESSAGE from ${NAME[from]} into ${NAME[to]}.
-Rules: natural spoken register a native speaker would use; keep the exact meaning, politeness level, numbers, prices, currency, times, addresses and names; fix obvious speech-recognition errors from context; no explanations. Output ONLY the translation text.
+- Convey the speaker's intended meaning and tone, not word-for-word. Use the natural spoken phrasing a native ${NAME[to]} speaker would use in this situation.
+- The message comes from speech recognition: drop fillers, hesitations and repeated words, and fix obvious recognition errors using the context.
+- Render idioms and colloquial expressions with a natural equivalent.
+- Keep numbers, prices, currencies, times, dates, addresses, names and quantities exactly.
+- Keep the politeness level; addressing strangers, be polite.
+- Output ONLY the translation, with no quotes, notes or alternatives.
+
 Recent conversation (context only, do not translate):
 ${ctx}
 
 MESSAGE:
-"""${text}"""`;
-  const r=await withTimeout(fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'content-type':'application/json','x-api-key':cfg.key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
-    body:JSON.stringify({model:cfg.model||'claude-sonnet-5-5',max_tokens:600,messages:[{role:'user',content:prompt}]})}),30000);
-  if(r.status===401)throw{code:'badkey'};if(!r.ok)throw{code:'http'};
-  const j=await r.json();const t=(j.content||[]).filter(c=>c.type==='text').map(c=>c.text).join('').trim().replace(/^"+|"+$/g,'');
+${text}`;
+}
+const clean=t=>t.trim().replace(/^(translation|çeviri|ترجمه)\s*:\s*/i,'').replace(/^["«“']+|["»”']+$/g,'').trim();
+async function claudeT(text,from,to){
+  const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'content-type':'application/json','x-api-key':cfg.ckey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+    body:JSON.stringify({model:cfg.cmodel||'claude-sonnet-5-5',max_tokens:800,messages:[{role:'user',content:aiPrompt(text,from,to)}]})});
+  if(r.status===401||r.status===403)throw{code:'badkey'};if(!r.ok)throw{code:'http',status:r.status};
+  const j=await r.json();const t=clean((j.content||[]).filter(c=>c.type==='text').map(c=>c.text).join(''));
   if(!t)throw{code:'empty'};return t;
 }
-async function translate(text,from,to){
-  const t0=performance.now();
-  if(cfg.engine==='claude'&&cfg.key){
-    try{const r=await claudeT(text,from,to);diag.engine='Claude';diag.ms=Math.round(performance.now()-t0);return r}catch(e){if(e.code==='badkey')throw e}
-  }
-  // Google first; if it hasn't answered in 1.5s, start the backup too and take whichever answers first
-  const g=googleT(text,from,to).then(r=>{diag.engine='Google';return r});
-  const backup=new Promise(res=>setTimeout(res,1500)).then(()=>myMemoryT(text,from,to)).then(r=>{diag.engine='MyMemory';return r});
-  const r=await Promise.any([g,backup]).catch(()=>{throw{code:'net'}});
-  diag.ms=Math.round(performance.now()-t0);showDiag();return r;
+async function geminiT(text,from,to){
+  const url='https://generativelanguage.googleapis.com/v1beta/models/'+encodeURIComponent((cfg.gmodel||'gemini-flash-latest').trim())+':generateContent?key='+encodeURIComponent(cfg.gkey);
+  const body={contents:[{role:'user',parts:[{text:aiPrompt(text,from,to)}]}],generationConfig:{temperature:0.3,maxOutputTokens:800,thinkingConfig:{thinkingBudget:0}}};
+  const call=()=>fetch(url,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(body)});
+  let r=await call();
+  if(r.status===400){const tx=await r.text();if(/api.?key/i.test(tx))throw{code:'badkey'};delete body.generationConfig.thinkingConfig;r=await call()}
+  if(r.status===401||r.status===403){throw{code:'badkey'}}
+  if(r.status===404)throw{code:'model'};
+  if(!r.ok)throw{code:'http',status:r.status};
+  const j=await r.json();const c=(j.candidates||[])[0];
+  const t=clean(((c&&c.content&&c.content.parts)||[]).map(p=>p.text||'').join(''));
+  if(!t)throw{code:'empty'};return t;
+}
+const aiT=(text,from,to)=>cfg.engine==='claude'?claudeT(text,from,to):geminiT(text,from,to);
+async function bestT(text,from,to){
+  if(aiReady()){try{return{r:await withTimeout(aiT(text,from,to),15000),e:aiName()}}catch(e){if(e.code==='badkey')throw e}}
+  return await quickT(text,from,to);
+}
+function errMsg(e){
+  const c=e&&e.code;
+  if(c==='badkey')return 'کلید هوش مصنوعی نامعتبر است. در «تنظیمات» اصلاحش کنید.';
+  if(c==='model')return 'نام مدل Gemini پیدا نشد. در «تنظیمات» مدل را gemini-flash-latest بگذارید.';
+  if(c==='net')return 'سرویس ترجمه جواب نداد. اگر در ایران هستید احتمالاً فیلتر است؛ VPN را روشن کنید.';
+  if(c==='timeout')return 'پاسخ خیلی طول کشید. اینترنت را بررسی کنید.';
+  return 'ترجمه انجام نشد. اینترنت را بررسی کنید و دوباره بفرستید.';
 }
 
 // ---------- speech out ----------
-const canSpeak='speechSynthesis' in window && typeof SpeechSynthesisUtterance!=='undefined';
 function speak(text,l){
   if(!canSpeak)return;
   try{
     speechSynthesis.cancel();
-    const u=new SpeechSynthesisUtterance(text);u.lang=SR_LANG[l];
     const v=speechSynthesis.getVoices().find(v=>v.lang&&v.lang.toLowerCase().startsWith(l));
-    if(v)u.voice=v;
     if(l==='fa'&&!v)return; // no Persian voice: stay silent instead of mispronouncing
+    const u=new SpeechSynthesisUtterance(text);u.lang=SR_LANG[l];if(v)u.voice=v;
     speechSynthesis.speak(u);
   }catch(e){}
 }
+if(canSpeak){try{speechSynthesis.getVoices()}catch(e){}}
 
 // ---------- render ----------
+const el=(tag,cls,txt)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(txt!=null)e.textContent=txt;return e};
 function bubbleFor(side){
-  // side shows: what the OTHER side said (translated) big, plus own last message small
-  const feed=$(side==='me'?'mFeed':'gFeed');
-  feed.innerHTML='';
+  const feed=$(side==='me'?'mFeed':'gFeed');feed.innerHTML='';
+  const G=UI[$('gLang').value];
   const last=conv.lines[conv.lines.length-1];
-  if(!last){const e=document.createElement('div');e.className='empty';e.id=side==='me'?'mEmpty':'gEmpty';
-    e.textContent=side==='me'?'فارسی بگویید یا بنویسید. ترجمه با متن درشت در نیمه بالا برای طرف مقابل نمایش داده و خوانده می‌شود.':UI[$('gLang').value].empty;feed.append(e);return}
-  const mine=last.who===side;
-  const wrap=document.createElement('div');wrap.style.display='flex';wrap.style.flexDirection='column';wrap.style.gap='4px';
+  if(!last){feed.append(el('div','empty',side==='me'?'فارسی بگویید یا بنویسید. ترجمه با متن درشت در نیمه بالا برای طرف مقابل نمایش داده و خوانده می‌شود. جمله‌های پرکاربرد در دکمه «جملات» هستند.':G.empty));return}
+  const mine=last.who===side, wrap=el('div','stack');
   if(last.pending){
-    const p=document.createElement('div');p.className='thinking';
-    p.textContent=mine?(side==='me'?'در حال ترجمه…':UI[$('gLang').value].think):'…';
-    if(mine){const s=document.createElement('div');s.className='small';s.textContent=last.src;wrap.append(s)}
-    wrap.append(p);feed.append(wrap);return;
-  }
-  if(last.error){
-    const s=document.createElement('div');s.className='small';s.textContent=last.src;
-    const h=document.createElement('div');h.className='hint';h.textContent=mine?(side==='me'?last.error:'Translation failed. Try again.'):'';
-    wrap.append(s,h);feed.append(wrap);return;
-  }
-  if(mine){
-    const s=document.createElement('div');s.className='small';s.textContent=(side==='me'?'گفتید: ':'You said: ')+last.src;
-    const t=document.createElement('div');t.className='small';t.dir='auto';t.textContent=(side==='me'?'ترجمه: ':'Shown as: ')+last.tr;
-    wrap.append(s,t);
+    if(mine)wrap.append(el('div','small',last.src));
+    wrap.append(el('div','thinking',mine?(side==='me'?'در حال ترجمه…':G.think):'…'));
+  }else if(last.error){
+    wrap.append(el('div','small',last.src));
+    if(mine)wrap.append(el('div','hint',side==='me'?last.error:G.fail));
+  }else if(mine){
+    wrap.append(el('div','small',(side==='me'?'گفتید: ':G.said)+last.src));
+    const t=el('div','small',(side==='me'?'ترجمه: ':G.shown)+last.tr);t.dir='auto';wrap.append(t);
+    if(last.draft)wrap.append(el('div','st',side==='me'?('در حال بهبود ترجمه با '+aiName()+'…'):'…'));
+    if(last.note&&side==='me')wrap.append(el('div','note-line',last.note));
+    if(side==='me'&&!last.draft){
+      const saved=phrases.some(p=>p.fa===last.src);
+      const b=el('button','mini',saved?'★ در جملات ذخیره شده':'☆ ذخیره در جملات');b.type='button';b.disabled=saved;
+      b.onclick=()=>{addPhraseFromLine(last);render()};wrap.append(b);
+    }
   }else{
-    const b=document.createElement('div');b.className='big';b.dir='auto';b.textContent=last.tr;
-    const row=document.createElement('div');row.style.display='flex';row.style.alignItems='center';row.style.gap='6px';
-    if(canSpeak){const sp=document.createElement('button');sp.className='spk';sp.type='button';sp.textContent='🔊';sp.setAttribute('aria-label','play');sp.onclick=()=>speak(last.tr,last.trLang);row.append(sp)}
-    const o=document.createElement('div');o.className='small';o.dir='auto';o.textContent=last.src;row.append(o);
-    wrap.append(b,row);
+    const b=el('div','big'+(last.draft?' draft':''),last.tr);b.dir='auto';wrap.append(b);
+    const row=el('div');row.style.cssText='display:flex;align-items:center;gap:6px';
+    if(canSpeak&&!last.draft){const sp=el('button','mini','🔊');sp.type='button';sp.setAttribute('aria-label','play');sp.onclick=()=>speak(last.tr,last.trLang);row.append(sp)}
+    const o=el('div','small',last.src);o.dir='auto';row.append(o);wrap.append(row);
   }
   feed.append(wrap);
 }
-function render(){bubbleFor('me');bubbleFor('guest')}
+function render(){bubbleFor('me');bubbleFor('guest');badge()}
 
 // ---------- send ----------
 async function send(who,text){
-  text=text.trim();if(!text)return;
-  const L=lang();const from=who==='me'?L.me:L.guest,to=who==='me'?L.guest:L.me;
+  text=(text||'').trim();if(!text)return;
+  const L=lang(),from=who==='me'?L.me:L.guest,to=who==='me'?L.guest:L.me;
   const line={who,src:text,srcLang:from,trLang:to,t:Date.now(),pending:true};
   conv.lines.push(line);render();
-  try{
-    line.tr=await translate(text,from,to);delete line.pending;render();
-    speak(line.tr,to);save();
-  }catch(e){
-    delete line.pending;
-    line.error=e&&e.code==='net'?'سرویس ترجمه جواب نداد. اگر در ایران هستید احتمالاً فیلتر است؛ VPN را روشن کنید.':e&&e.code==='badkey'?'کلید API نامعتبر است. در «تنظیمات» اصلاح کنید یا موتور رایگان را انتخاب کنید.':'ترجمه انجام نشد. اینترنت را بررسی کنید و دوباره بفرستید.';
-    render();
-    conv.lines.pop(); // failed line not kept
-    (who==='me'?$('mIn'):$('gIn')).value=text;
+  const t0=performance.now(),useAI=aiReady();
+  const qp=quickT(text,from,to).then(x=>{if(useAI&&!line.done){line.tr=x.r;line.draft=true;delete line.pending;render()}return x}).catch(()=>null);
+  let final=null,engine='',aiErr=null;
+  if(useAI){try{final=await withTimeout(aiT(text,from,to),15000);engine=aiName()}catch(e){aiErr=e}}
+  if(!final){const q=await qp;if(q){final=q.r;engine=q.e}}
+  line.done=true;delete line.pending;delete line.draft;
+  diag.ms=Math.round(performance.now()-t0);
+  if(!final){
+    line.error=errMsg(aiErr&&aiErr.code==='badkey'?aiErr:{code:'net'});render();
+    const i=conv.lines.indexOf(line);if(i>=0)conv.lines.splice(i,1);
+    const inp=$(who==='me'?'mIn':'gIn');if(!inp.value)inp.value=text;
+    diag.engine='ناموفق';return;
   }
+  line.tr=final;line.engine=engine;
+  if(aiErr)line.note=aiErr.code==='badkey'?'کلید هوش مصنوعی نامعتبر است؛ ترجمه ساده نمایش داده شد.':(aiName()+' جواب نداد ('+aiErr.code+')؛ ترجمه ساده نمایش داده شد.');
+  diag.engine=engine+(aiErr?(' — خطای '+aiName()+': '+aiErr.code+(aiErr.status?(' '+aiErr.status):'')):'');
+  render();speak(final,to);save();
 }
 $('mForm').onsubmit=e=>{e.preventDefault();const v=$('mIn').value;$('mIn').value='';send('me',v)};
 $('gForm').onsubmit=e=>{e.preventDefault();const v=$('gIn').value;$('gIn').value='';send('guest',v)};
 
-// ---------- speech in ----------
-const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
-let active=null;
+// ---------- speech in (long pauses, cancel) ----------
 const MIC_MSG={
-  insecure:'میکروفون فقط وقتی کار می‌کند که برنامه از یک لینک https در Chrome باز شود. فایل ذخیره‌شده روی گوشی اجازه میکروفون نمی‌گیرد.',
+  insecure:'میکروفون فقط وقتی کار می‌کند که برنامه از لینک https در Chrome باز شود.',
   nosr:'این مرورگر تشخیص گفتار ندارد. برنامه را در Google Chrome باز کنید.',
-  denied:'دسترسی میکروفون رد شده. در Chrome: آیکون قفل کنار آدرس ← Permissions ← Microphone ← Allow.',
-  network:'سرویس تشخیص گفتار (سرورهای گوگل) در دسترس نیست. در ایران بدون VPN کار نمی‌کند؛ در ترکیه مشکلی ندارد.',
-  nospeech:'صدایی شنیده نشد. نزدیک‌تر صحبت کنید و دوباره امتحان کنید.',
+  denied:'دسترسی میکروفون رد شده. در Chrome: آیکون کنار آدرس ← Permissions ← Microphone ← Allow.',
+  network:'سرویس تشخیص گفتار (سرورهای گوگل) در دسترس نیست. در ایران بدون VPN کار نمی‌کند.',
   other:'میکروفون خطا داد'
 };
-function micFor(who){
-  const btn=$(who==='me'?'mMic':'gMic'),hint=$(who==='me'?'mHint':'gHint'),inp=$(who==='me'?'mIn':'gIn');
-  const fail=(k,extra)=>{diag.mic=k+(extra?(' ('+extra+')'):'');showDiag();
-    hint.textContent=who==='me'?(MIC_MSG[k]+(extra?(' — '+extra):'')+' تا آن موقع از میکروفون کیبورد (Gboard) استفاده کنید.'):UI[$('gLang').value].mic;hint.hidden=false};
-  btn.onclick=async()=>{
-    hint.hidden=true;
-    if(active){try{active.stop()}catch(e){}return}
-    if(!window.isSecureContext){fail('insecure');return}
-    if(!SR){fail('nosr');return}
-    // Explicit permission request: makes Chrome show the prompt
-    if(!micGranted&&navigator.mediaDevices&&navigator.mediaDevices.getUserMedia){
-      try{const st=await navigator.mediaDevices.getUserMedia({audio:true});st.getTracks().forEach(t=>t.stop());micGranted=true}
-      catch(e){fail(e&&e.name==='NotAllowedError'?'denied':'other',e&&e.name);return}
-    }
-    let rec;try{rec=new SR()}catch(e){fail('nosr');return}
-    const L=lang();rec.lang=SR_LANG[who==='me'?L.me:L.guest];rec.interimResults=true;rec.maxAlternatives=1;
-    let finalText='',errored=false;
-    rec.onresult=ev=>{let s='';for(const r of ev.results){s+=r[0].transcript}inp.value=s;if(ev.results[ev.results.length-1].isFinal)finalText=s};
-    rec.onerror=ev=>{errored=true;const e=ev.error;
-      fail(e==='not-allowed'||e==='service-not-allowed'?'denied':e==='network'?'network':e==='no-speech'?'nospeech':e==='language-not-supported'?'other':'other',e)};
-    rec.onend=()=>{btn.classList.remove('rec');active=null;const v=(finalText||inp.value).trim();if(v&&!errored){inp.value='';send(who,v)}};
-    try{rec.start();active=rec;btn.classList.add('rec');diag.mic='ok';showDiag()}catch(e){fail('other',e&&e.message)}
-  };
+let micGranted=false;
+const R={on:false,who:null,rec:null,cancelled:false,finishing:false,fatal:false,base:'',finals:[],interim:'',timer:null};
+const micEls=who=>{const p=who==='me'?'m':'g';return{mic:$(p+'Mic'),x:$(p+'X'),send:$(p+'Send'),inp:$(p+'In'),hint:$(p+'Hint'),st:$(p+'St')}};
+function setRecUI(who,on){
+  const e=micEls(who);
+  e.mic.classList.toggle('rec',on);e.mic.innerHTML=on?ICON.check:ICON.mic;
+  e.mic.setAttribute('aria-label',on?(who==='me'?'تمام شد، ترجمه کن':'Done'):(who==='me'?'میکروفون':'Mikrofon'));
+  e.x.hidden=!on;e.send.hidden=on;e.st.hidden=!on;
+  if(on)e.st.textContent=who==='me'?('در حال شنیدن… '+(cfg.pause/1000).toLocaleString('fa-IR')+' ثانیه سکوت یعنی پایان. ✓ ارسال فوری، ✕ لغو'):UI[$('gLang').value].listen;
 }
-micFor('me');micFor('guest');
+function micFail(who,k,extra){
+  diag.mic=k+(extra?(' ('+extra+')'):'');
+  const e=micEls(who);
+  e.hint.textContent=who==='me'?(MIC_MSG[k]+(extra&&k==='other'?(' — '+extra):'')+' فعلاً از میکروفون کیبورد (Gboard) استفاده کنید.'):UI[$('gLang').value].mic;
+  e.hint.hidden=false;
+}
+function transcript(){
+  const out=[];
+  for(const f of R.finals){const t=f.trim();if(!t)continue;const last=out[out.length-1];
+    if(last&&t.startsWith(last))out[out.length-1]=t;else if(last&&last.startsWith(t)){}else out.push(t)}
+  return [R.base,out.join(' '),R.interim].filter(Boolean).join(' ').replace(/\s+/g,' ').trim();
+}
+function arm(){if(R.finishing)return;clearTimeout(R.timer);R.timer=setTimeout(finishRec,transcript()?cfg.pause:10000)}
+async function startRec(who){
+  if(R.on){if(R.who===who)finishRec();return}
+  const e=micEls(who);e.hint.hidden=true;
+  if(!window.isSecureContext){micFail(who,'insecure');return}
+  if(!SR){micFail(who,'nosr');return}
+  if(!micGranted&&navigator.mediaDevices&&navigator.mediaDevices.getUserMedia){
+    try{const s=await navigator.mediaDevices.getUserMedia({audio:true});s.getTracks().forEach(t=>t.stop());micGranted=true}
+    catch(err){micFail(who,err&&err.name==='NotAllowedError'?'denied':'other',err&&err.name);return}
+  }
+  if(canSpeak){try{speechSynthesis.cancel()}catch(x){}}
+  Object.assign(R,{on:true,who,rec:null,cancelled:false,finishing:false,fatal:false,base:'',finals:[],interim:''});
+  e.inp.value='';setRecUI(who,true);startSession();arm();
+}
+function startSession(){
+  let rec;try{rec=new SR()}catch(err){R.fatal=true;micFail(R.who,'nosr');endRec();return}
+  R.rec=rec;rec.lang=SR_LANG[R.who==='me'?lang().me:lang().guest];rec.continuous=true;rec.interimResults=true;rec.maxAlternatives=1;
+  rec.onresult=ev=>{if(R.rec!==rec)return;const fin=[];let intr='';
+    for(const r of ev.results){if(r.isFinal)fin.push(r[0].transcript);else intr+=r[0].transcript}
+    R.finals=fin;R.interim=intr.trim();micEls(R.who).inp.value=transcript();arm()};
+  rec.onerror=ev=>{if(R.rec!==rec)return;const er=ev.error;if(er==='no-speech'||er==='aborted')return;
+    R.fatal=true;micFail(R.who,er==='not-allowed'||er==='service-not-allowed'?'denied':er==='network'?'network':'other',er)};
+  rec.onend=()=>{if(R.rec!==rec)return;R.base=transcript();R.finals=[];R.interim='';
+    // Chrome stops on its own after short silences: restart silently until OUR pause timer decides the speaker is done
+    if(R.on&&!R.finishing&&!R.cancelled&&!R.fatal)setTimeout(()=>{if(R.on&&!R.finishing&&!R.cancelled&&!R.fatal)startSession()},60);
+    else endRec()};
+  try{rec.start();diag.mic='ok'}catch(err){R.fatal=true;micFail(R.who,'other',err&&err.message);endRec()}
+}
+function finishRec(){
+  if(!R.on||R.finishing)return;R.finishing=true;clearTimeout(R.timer);
+  try{R.rec&&R.rec.stop()}catch(e){endRec();return}
+  setTimeout(()=>{if(R.on)endRec()},1500);
+}
+function cancelRec(){
+  if(!R.on)return;R.cancelled=true;clearTimeout(R.timer);
+  const r=R.rec;R.rec=null;try{r&&r.abort()}catch(e){}
+  endRec();toast('لغو شد');
+}
+function endRec(){
+  if(!R.on)return;
+  const who=R.who,text=transcript(),e=micEls(who);
+  R.on=false;R.rec=null;clearTimeout(R.timer);setRecUI(who,false);
+  if(R.cancelled){e.inp.value='';return}
+  if(R.fatal){e.inp.value=text;return}
+  e.inp.value='';if(text)send(who,text);
+}
+$('mMic').onclick=()=>startRec('me');$('gMic').onclick=()=>startRec('guest');
+$('mX').onclick=cancelRec;$('gX').onclick=cancelRec;
+
+// ---------- saved phrases ----------
+const SEED=[
+  ['سلام، من ترکی بلد نیستم. لطفاً رو به گوشی صحبت کنید تا ترجمه شود.','Merhaba, Türkçe bilmiyorum. Lütfen telefona doğru konuşun, çevrilecek.','Hello, I don\'t speak Turkish. Please speak into the phone and it will be translated.'],
+  ['قیمتش چند است؟','Bunun fiyatı ne kadar?','How much is this?'],
+  ['ممکن است کمی تخفیف بدهید؟','Biraz indirim yapabilir misiniz?','Could you give me a small discount?'],
+  ['با کارت می‌توانم پرداخت کنم؟','Kartla ödeyebilir miyim?','Can I pay by card?'],
+  ['لطفاً مرا به این آدرس ببرید.','Lütfen beni bu adrese götürün.','Please take me to this address.'],
+  ['صورتحساب، لطفاً.','Hesap lütfen.','The bill, please.'],
+  ['این غذا گوشت خوک یا الکل دارد؟','Bu yemekte domuz eti veya alkol var mı?','Does this food contain pork or alcohol?'],
+  ['دستشویی کجاست؟','Tuvalet nerede?','Where is the restroom?'],
+  ['لطفاً کمک کنید، به پزشک نیاز دارم.','Lütfen yardım edin, doktora ihtiyacım var.','Please help, I need a doctor.']
+];
+let phrases=ls.get('phrases',null);
+if(!Array.isArray(phrases)){phrases=SEED.map((p,i)=>({id:'s'+i,fa:p[0],tr:{tr:p[1],en:p[2]}}));ls.set('phrases',phrases)}
+const savePh=()=>ls.set('phrases',phrases);
+function addPhraseFromLine(line){
+  if(phrases.some(p=>p.fa===line.src))return;
+  phrases.unshift({id:'p'+Date.now().toString(36),fa:line.src,tr:{[line.trLang]:line.tr}});savePh();toast('به جملات اضافه شد');
+}
+function renderPhrases(){
+  const g=lang().guest,list=$('phList');list.innerHTML='';
+  if(!phrases.length){list.append(el('div','note','هنوز جمله‌ای ذخیره نشده.'));return}
+  phrases.forEach(p=>{
+    const it=el('div','item'),u=el('button','use');u.type='button';
+    u.append(el('span','fa',p.fa),el('span','trn',(p.tr&&p.tr[g])||'(ترجمه هنگام استفاده انجام می‌شود)'));
+    u.onclick=()=>usePhrase(p);
+    const d=el('button','del','حذف');d.type='button';
+    d.onclick=()=>{if(d.dataset.sure!=='1'){d.dataset.sure='1';d.textContent='مطمئنید؟';return}phrases=phrases.filter(x=>x.id!==p.id);savePh();renderPhrases()};
+    it.append(u,d);list.append(it);
+  });
+}
+function usePhrase(p){
+  closeAll();
+  const g=lang().guest,tr=p.tr&&p.tr[g];
+  if(tr){conv.lines.push({who:'me',src:p.fa,srcLang:'fa',trLang:g,tr,t:Date.now(),done:true,engine:'saved'});render();speak(tr,g);save()}
+  else send('me',p.fa);
+}
+$('phForm').onsubmit=async e=>{
+  e.preventDefault();const fa=$('phIn').value.trim();if(!fa)return;
+  if(phrases.some(p=>p.fa===fa)){toast('این جمله قبلاً ذخیره شده');return}
+  const btn=$('phAdd');btn.disabled=true;btn.textContent='در حال ترجمه…';
+  const g=lang().guest,p={id:'p'+Date.now().toString(36),fa,tr:{}};
+  try{const r=await bestT(fa,'fa',g);p.tr[g]=r.r}catch(err){toast('ذخیره شد؛ ترجمه هنگام استفاده انجام می‌شود')}
+  phrases.unshift(p);savePh();$('phIn').value='';btn.disabled=false;btn.textContent='افزودن';renderPhrases();
+};
+$('bPh').onclick=()=>{renderPhrases();open('phSheet')};
 
 // ---------- save / history ----------
 let saveTimer=null;
@@ -362,69 +551,48 @@ function convTitle(c){const f=c.lines.find(l=>l.who==='me')||c.lines[0];return f
 function save(){
   if(!conv.lines.length)return;
   clearTimeout(saveTimer);
-  saveTimer=setTimeout(async()=>{
-    const data={createdAt:conv.createdAt,updatedAt:Date.now(),title:convTitle(conv),lines:conv.lines.filter(l=>l.tr).map(({who,src,srcLang,tr,trLang,t})=>({who,src,srcLang,tr,trLang,t}))};
-    let ok=false;
-    const local=ls.get('convs',{});local[conv.id]=data;ls.set('convs',local);ok=true;
-    if(ok){$('saved').hidden=false;setTimeout(()=>$('saved').hidden=true,1500)}
+  saveTimer=setTimeout(()=>{
+    const data={createdAt:conv.createdAt,updatedAt:Date.now(),title:convTitle(conv),lines:conv.lines.filter(l=>l.tr&&!l.error).map(({who,src,srcLang,tr,trLang,t})=>({who,src,srcLang,tr,trLang,t}))};
+    const all=ls.get('convs',{});all[conv.id]=data;ls.set('convs',all);
   },600);
 }
-$('bNew').onclick=()=>{conv=newConv();render()};
-
-async function loadConvs(){
-  const out={};
-  const local=ls.get('convs',{});for(const k in local)out[k]=local[k];
-  return Object.entries(out).sort((a,b)=>(b[1].updatedAt||0)-(a[1].updatedAt||0));
-}
+$('bNew').onclick=()=>{conv=newConv();render();toast('گفتگوی جدید')};
 function fmtDate(t){try{return new Date(t).toLocaleString('fa-IR',{dateStyle:'medium',timeStyle:'short'})}catch(e){return''}}
-async function showHistory(){
-  open('histSheet');$('histTitle').textContent='گفتگوهای ذخیره‌شده';$('histBack').hidden=true;
-  const body=$('histBody');body.textContent='در حال بارگذاری…';
-  const list=await loadConvs();
-  body.innerHTML='';
-  if(!list.length){body.className='note';body.textContent='هنوز گفتگویی ذخیره نشده. هر ترجمه خودکار ذخیره می‌شود.';return}
-  body.className='';body.style.display='flex';body.style.flexDirection='column';body.style.gap='8px';
-  list.forEach(([id,c])=>{
-    const el=document.createElement('div');el.className='conv';
-    const t=document.createElement('div');t.className='t';t.textContent=c.title||'گفتگو';
-    const m=document.createElement('div');m.className='m';m.textContent=fmtDate(c.updatedAt||c.createdAt)+' · '+(c.lines||[]).length.toLocaleString('fa-IR')+' پیام';
-    const a=document.createElement('div');a.className='acts';
-    const o=document.createElement('button');o.textContent='مشاهده';o.onclick=()=>showConv(id,c);
-    const r=document.createElement('button');r.textContent='ادامه گفتگو';r.onclick=()=>{conv={id,createdAt:c.createdAt||Date.now(),lines:(c.lines||[]).slice()};render();closeAll()};
-    const d=document.createElement('button');d.className='del';d.textContent='حذف';
-    d.onclick=async()=>{
-      if(d.dataset.sure!=='1'){d.dataset.sure='1';d.textContent='مطمئنید؟ دوباره بزنید';return}
-      const local=ls.get('convs',{});delete local[id];ls.set('convs',local);
-      el.remove();
-    };
-    const x=document.createElement('button');x.textContent='خروجی متن';x.onclick=()=>exportConv(c);
-    a.append(o,r,x,d);el.append(t,m,a);body.append(el);
-  });
-}
-function showConv(id,c){
-  $('histTitle').textContent=c.title||'گفتگو';$('histBack').hidden=false;
-  const body=$('histBody');body.innerHTML='';
-  (c.lines||[]).forEach(l=>{
-    const el=document.createElement('div');el.className='line';
-    const tag=document.createElement('span');tag.className='tag';tag.textContent=l.who==='me'?'من':'طرف مقابل';
-    const s=document.createElement('div');s.className='s';s.dir='auto';s.textContent=l.src;
-    const tr=document.createElement('div');tr.className='tr';tr.dir='auto';tr.textContent=l.tr;
-    el.append(tag,s,tr);body.append(el);
-  });
-}
 function exportConv(c){
   const txt=(c.title||'گفتگو')+'\n'+fmtDate(c.updatedAt||c.createdAt)+'\n\n'+(c.lines||[]).map(l=>(l.who==='me'?'من':'طرف مقابل')+': '+l.src+'\n→ '+l.tr).join('\n\n');
   const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([txt],{type:'text/plain;charset=utf-8'}));
   a.download='safar-'+new Date(c.createdAt||Date.now()).toISOString().slice(0,10)+'.txt';document.body.append(a);a.click();
   setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},2000);
 }
-$('histBack').onclick=showHistory;
-$('bHist').onclick=showHistory;
-
-// ---------- settings UI ----------
-function syncSet(){$('eng').value=cfg.engine;$('key').value=cfg.key||'';$('mod').value=cfg.model||'claude-sonnet-5-5';$('keyF').hidden=$('modF').hidden=cfg.engine!=='claude'}
-['eng','key','mod'].forEach(id=>$(id).addEventListener('input',()=>{cfg={engine:$('eng').value,key:$('key').value.trim(),model:$('mod').value};ls.set('cfg',cfg);syncSet()}));
-$('bSet').onclick=()=>{syncSet();showDiag();open('setSheet')};
+function showHistory(){
+  open('histSheet');$('histTitle').textContent='گفتگوهای ذخیره‌شده';$('histBack').hidden=true;
+  const body=$('histBody');body.innerHTML='';
+  const list=Object.entries(ls.get('convs',{})).sort((a,b)=>(b[1].updatedAt||0)-(a[1].updatedAt||0));
+  if(!list.length){body.className='note';body.textContent='هنوز گفتگویی ذخیره نشده. هر ترجمه خودکار ذخیره می‌شود.';return}
+  body.className='list';
+  list.forEach(([id,c])=>{
+    const box=el('div','conv');
+    box.append(el('div','t',c.title||'گفتگو'),el('div','m',fmtDate(c.updatedAt||c.createdAt)+' · '+(c.lines||[]).length.toLocaleString('fa-IR')+' پیام'));
+    const a=el('div','acts');
+    const o=el('button',null,'مشاهده');o.onclick=()=>showConv(c);
+    const r=el('button',null,'ادامه گفتگو');r.onclick=()=>{conv={id,createdAt:c.createdAt||Date.now(),lines:(c.lines||[]).slice()};render();closeAll()};
+    const x=el('button',null,'خروجی متن');x.onclick=()=>exportConv(c);
+    const d=el('button',null,'حذف');d.style.color='var(--accent)';
+    d.onclick=()=>{if(d.dataset.sure!=='1'){d.dataset.sure='1';d.textContent='مطمئنید؟ دوباره بزنید';return}
+      const all=ls.get('convs',{});delete all[id];ls.set('convs',all);box.remove()};
+    a.append(o,r,x,d);box.append(a);body.append(box);
+  });
+}
+function showConv(c){
+  $('histTitle').textContent=c.title||'گفتگو';$('histBack').hidden=false;
+  const body=$('histBody');body.innerHTML='';body.className='';
+  (c.lines||[]).forEach(l=>{
+    const ln=el('div','line');
+    const s=el('div','s',l.src);s.dir='auto';const tr=el('div','tr',l.tr);tr.dir='auto';
+    ln.append(el('span','tag',l.who==='me'?'من':'طرف مقابل'),s,tr);body.append(ln);
+  });
+}
+$('histBack').onclick=showHistory;$('bHist').onclick=showHistory;
 
 // ---------- sheets ----------
 function open(id){$(id).hidden=false}
@@ -432,27 +600,56 @@ function closeAll(){document.querySelectorAll('.sheet').forEach(s=>s.hidden=true
 document.querySelectorAll('[data-close]').forEach(b=>b.onclick=closeAll);
 document.querySelectorAll('.sheet').forEach(s=>s.addEventListener('click',e=>{if(e.target===s)closeAll()}));
 
+// ---------- settings UI ----------
+function showDiag(){$('diag').textContent='HTTPS: '+(window.isSecureContext?'بله':'خیر')+' · تشخیص گفتار: '+(SR?'دارد':'ندارد')+' · میکروفون: '+diag.mic+' · آخرین ترجمه: '+diag.engine+(diag.ms?(' در '+(diag.ms/1000).toFixed(1)+' ثانیه'):'')}
+function syncSet(){
+  $('eng').value=cfg.engine;$('gkey').value=cfg.gkey;$('gmodel').value=cfg.gmodel;$('ckey').value=cfg.ckey;$('cmodel').value=cfg.cmodel;$('pause').value=String(cfg.pause);
+  $('gemF').hidden=cfg.engine!=='gemini';$('claF').hidden=cfg.engine!=='claude';
+}
+['eng','gkey','gmodel','ckey','cmodel','pause'].forEach(id=>$(id).addEventListener('input',()=>{
+  cfg={engine:$('eng').value,gkey:$('gkey').value.trim(),gmodel:$('gmodel').value.trim()||'gemini-flash-latest',ckey:$('ckey').value.trim(),cmodel:$('cmodel').value,pause:+$('pause').value||2500};
+  saveCfg();syncSet();badge();
+}));
+$('testBtn').onclick=async()=>{
+  const out=$('testOut');out.textContent='در حال تست…';const t0=performance.now();
+  const sample='آقا ببخشید، این کیف چرم رو آخرش چند می‌دی؟ یه کم گرونه.';
+  const lines=[];
+  try{const q=await quickT(sample,'fa','tr');lines.push('ساده ('+q.e+', '+((performance.now()-t0)/1000).toFixed(1)+' ث): '+q.r)}catch(e){lines.push('ساده: ناموفق — '+errMsg(e))}
+  if(aiReady()){const t1=performance.now();
+    try{const a=await withTimeout(aiT(sample,'fa','tr'),20000);lines.push(aiName()+' ('+((performance.now()-t1)/1000).toFixed(1)+' ث): '+a)}
+    catch(e){lines.push(aiName()+': ناموفق — '+errMsg(e)+(e.status?(' (کد '+e.status+')'):''))}}
+  else lines.push('هوش مصنوعی: فعال نیست (موتور یا کلید تنظیم نشده).');
+  out.textContent='جمله تست: '+sample+'\n'+lines.join('\n');out.style.whiteSpace='pre-line';
+};
+$('bSet').onclick=()=>{syncSet();showDiag();open('setSheet')};
+
 // ---------- lira converter ----------
 const toEn=s=>String(s).replace(/[۰-۹]/g,d=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(d)).replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[,٬،\s]/g,'').replace('٫','.');
 const num=s=>{const n=parseFloat(toEn(s));return isFinite(n)?n:0};
 const fmt=(n,d=0)=>n.toLocaleString('en-US',{maximumFractionDigits:d});
-let rate=ls.get('rate',DEFAULT_RATE);
-$('rate').value=fmt(rate);
-function note(){const custom=ls.get('rate',null)!=null&&ls.get('rate')!==DEFAULT_RATE;
-  $('rateNote').textContent=custom?'نرخ را خودتان وارد کرده‌اید. پیش‌فرض: '+fmt(DEFAULT_RATE)+' تومان (بازار آزاد، '+RATE_DATE+').':
-  'نرخ پیش‌فرض: میانگین خرید/فروش بازار آزاد، '+RATE_DATE+'. نرخ صرافی‌های استانبول و کارت‌های ارزی متفاوت است؛ نرخ روز را اینجا جایگزین کنید.';
-  $('bLira').textContent='₺ ۱ = '+Math.round(rate).toLocaleString('fa-IR')+' ت'}
-function fromLira(){$('toman').value=fmt(num($('lira').value)*rate)}
-function fromToman(){$('lira').value=fmt(rate?num($('toman').value)/rate:0,2)}
-$('lira').oninput=fromLira;$('toman').oninput=fromToman;
-$('rate').oninput=()=>{const r=num($('rate').value);if(r>0){rate=r;ls.set('rate',r);fromLira();note()}};
-fromLira();note();
+let rate=ls.get('rate',DEFAULT_RATE),usdRate=ls.get('usdRate',DEFAULT_USD);
+$('rate').value=fmt(rate);$('usdRate').value=fmt(usdRate,2);
+function rateNote(){
+  const a=rate!==DEFAULT_RATE?('لیر: نرخ دستی شما (پیش‌فرض '+fmt(DEFAULT_RATE)+' تومان).'):('لیر: بازار آزاد ایران، '+RATE_DATE+'.');
+  const b=usdRate!==DEFAULT_USD?(' دلار: نرخ دستی شما (پیش‌فرض '+fmt(DEFAULT_USD,2)+' لیر).'):(' دلار: نرخ بین‌بانکی ترکیه، '+USD_DATE+'.');
+  $('rateNote').textContent=a+b+' نرخ صرافی‌های استانبول کمی متفاوت است؛ نرخ روز را در دو کادر بالا جایگزین کنید. (دلار به تومان از این دو نرخ حدود '+fmt(rate*usdRate)+' تومان می‌شود.)';
+  $('bLira').textContent='₺ ۱ = '+Math.round(rate).toLocaleString('fa-IR')+' ت';
+}
+function setFromLira(l,skip){
+  if(skip!=='toman')$('toman').value=fmt(l*rate);
+  if(skip!=='usd')$('usd').value=fmt(usdRate?l/usdRate:0,2);
+  if(skip!=='lira')$('lira').value=fmt(l,2);
+}
+$('lira').oninput=()=>setFromLira(num($('lira').value),'lira');
+$('toman').oninput=()=>setFromLira(rate?num($('toman').value)/rate:0,'toman');
+$('usd').oninput=()=>setFromLira(num($('usd').value)*usdRate,'usd');
+$('rate').oninput=()=>{const r=num($('rate').value);if(r>0){rate=r;ls.set('rate',r);setFromLira(num($('lira').value),'lira');rateNote()}};
+$('usdRate').oninput=()=>{const r=num($('usdRate').value);if(r>0){usdRate=r;ls.set('usdRate',r);setFromLira(num($('lira').value),'lira');rateNote()}};
+setFromLira(num($('lira').value),'lira');rateNote();
 $('bLira').onclick=()=>open('liraSheet');
 
-if(canSpeak){try{speechSynthesis.getVoices();speechSynthesis.onvoiceschanged=()=>{}}catch(e){}}
 render();
 })();
 </script>
-
 </body>
 </html>
